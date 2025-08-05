@@ -1,16 +1,21 @@
 import time
+import os
 from playwright.sync_api import sync_playwright
+from dotenv import load_dotenv
+
+# 加载环境变量
+load_dotenv()
 
 class AutoReservation:
     def __init__(self):
-        self.username = "302023030004"
-        self.password = "zhoubo162!!"
+        self.username = os.getenv('LOGIN_USERNAME')
+        self.password = os.getenv('PASSWORD')
         self.url = "http://www.api.zgyy.zjut.edu.cn/h5/main/reservation"
         self.browser = None
         self.page = None
         # 同行人员信息
-        self.companion_name = "周博"
-        self.companion_phone = "18072077193"
+        self.companion_name = os.getenv('COMPANION_NAME')
+        self.companion_phone = os.getenv('COMPANION_PHONE')
     
     def start_browser(self):
         """启动浏览器"""

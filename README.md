@@ -11,33 +11,81 @@
 5. 填写同行人员信息
 6. 完成预约和支付
 
+## 程序文件
+
+- **auto_reservation.py** - 主要的预约程序
+- **timer.py** - 基础版定时程序（无需额外依赖）
+- **scheduler.py** - 简洁版定时程序（需要安装schedule库）
+
+## 安装依赖
+
+```bash
+pip install -r requirements.txt
+```
+
+## 配置环境变量
+
+创建 `.env` 文件并配置以下信息：
+
+```
+LOGIN_USERNAME=你的学号
+PASSWORD=你的密码
+COMPANION_NAME=同行人员姓名
+COMPANION_PHONE=同行人员手机号
+SCHEDULE_TIME=05:00
+```
+
 ## 使用方法
 
-1. 安装依赖：
-   ```bash
-   pip install -r requirements.txt
-   ```
+### 单次运行
 
-2. 修改配置：
-   - 在 `auto_reservation.py` 中修改用户名、密码和同行人员信息
+```bash
+python auto_reservation.py
+```
 
-3. 运行程序：
-   ```bash
-   python auto_reservation.py
-   ```
+### 定时运行
 
-## 配置说明
+#### 方法一：使用基础版（推荐）
 
-在 `AutoReservation` 类的 `__init__` 方法中可以修改以下配置：
+```bash
+python timer.py
+```
 
-- `username`: 学号/工号
-- `password`: 密码
-- `companion_name`: 同行人员姓名
-- `companion_phone`: 同行人员手机号
+- 无需额外安装依赖
+- 程序会自动计算等待时间
+- 每天凌晨5:00自动运行预约脚本
+
+#### 方法二：使用简洁版
+
+```bash
+python scheduler.py
+```
+
+- 需要安装schedule库
+- 代码更简洁
+- 每天凌晨5:00自动运行预约脚本
+
+## 停止程序
+
+按 `Ctrl+C` 停止定时程序
 
 ## 注意事项
 
-- 程序会自动截图保存关键步骤
-- 如果某个时间段已被预约，程序会自动跳过
-- 程序运行完成后会保持浏览器打开，方便查看结果
-- 请确保网络连接正常
+1. 程序会自动截图保存关键步骤
+2. 如果某个时间段已被预约，程序会自动跳过
+3. 程序运行完成后会保持浏览器打开，方便查看结果
+4. 请确保网络连接正常
+5. 定时程序需要保持运行状态才能在指定时间执行
+6. 建议在电脑不关机的情况下使用定时功能
+7. 如果预约脚本执行失败，程序会继续等待下一个执行时间
+
+## 文件结构
+
+```
+├── README.md              # 使用说明
+├── auto_reservation.py    # 主要预约程序
+├── timer.py              # 基础版定时程序
+├── scheduler.py          # 简洁版定时程序
+├── requirements.txt      # 依赖包列表
+└── .env                  # 环境变量配置（需要自己创建）
+```
