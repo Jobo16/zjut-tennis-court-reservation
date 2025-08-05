@@ -65,7 +65,7 @@ def wait_until_schedule_time():
 
 def main():
     schedule_time = os.getenv('SCHEDULE_TIME', '05:00')
-    print(f"定时程序已启动，等待每天{schedule_time}运行预约脚本...")
+    print(f"定时程序已启动，等待{schedule_time}时运行预约脚本...")
     try:
         while True:
             # 等待到指定时间
