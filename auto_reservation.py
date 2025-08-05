@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class AutoReservation:
-    def __init__(self):
+    def __init__(self, auto_close=False):
         self.username = os.getenv('LOGIN_USERNAME')
         self.password = os.getenv('PASSWORD')
         self.url = "http://www.api.zgyy.zjut.edu.cn/h5/main/reservation"
@@ -16,6 +16,7 @@ class AutoReservation:
         # 同行人员信息
         self.companion_name = os.getenv('COMPANION_NAME')
         self.companion_phone = os.getenv('COMPANION_PHONE')
+        self.auto_close = auto_close
     
     def start_browser(self):
         """启动浏览器"""
@@ -284,8 +285,12 @@ class AutoReservation:
             
             self.take_screenshot("reservation_completed")
             
-            # 保持浏览器打开以便查看结果
-            input("\n预约完成！按回车键关闭浏览器...")
+            # 根据auto_close参数决定是否等待用户输入
+            if self.auto_close:
+                print("\n预约完成！程序将自动关闭浏览器...")
+                time.sleep(3)  # 等待3秒让用户看到结果
+            else:
+                input("\n预约完成！按回车键关闭浏览器...")
                 
         except Exception as e:
             print(f"程序运行出错: {e}")

@@ -1,24 +1,22 @@
 import time
 import datetime
-import subprocess
 import os
 from dotenv import load_dotenv
+from auto_reservation import AutoReservation
 
 # 加载环境变量
 load_dotenv()
 
 def run_reservation_script():
     """运行预约脚本"""
-    script_path = r'c:\Users\admin\Desktop\新建文件夹 (3)\auto_reservation.py'
-    print(f"开始运行预约脚本: {script_path}")
+    print("开始运行预约脚本...")
     try:
-        # 使用Python解释器运行脚本
-        subprocess.run(['python', script_path], check=True)
+        # 创建AutoReservation实例，设置auto_close=True自动关闭
+        app = AutoReservation(auto_close=True)
+        app.run()
         print("预约脚本执行完成")
-    except subprocess.CalledProcessError as e:
-        print(f"预约脚本执行失败: {e}")
     except Exception as e:
-        print(f"发生错误: {e}")
+        print(f"预约脚本执行失败: {e}")
 
 def wait_until_schedule_time():
     """等待到指定时间"""
@@ -72,10 +70,15 @@ def main():
         while True:
             # 等待到指定时间
             wait_until_schedule_time()
-            # 运行预约脚本
+            # 运行预约脚本两次
+            print("开始第一次预约尝试...")
+            run_reservation_script()
+            print("等待5秒后进行第二次预约尝试...")
+            time.sleep(5)
+            print("开始第二次预约尝试...")
             run_reservation_script()
             # 等待下一个执行时间
-            print(f"等待下一个{schedule_time}...")
+            print(f"两次预约尝试完成，等待下一个{schedule_time}...")
     except KeyboardInterrupt:
         print("\n程序已手动停止")
     except Exception as e:
