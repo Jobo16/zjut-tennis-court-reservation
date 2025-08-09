@@ -28,7 +28,8 @@ class AutoReservation:
         # playwright.chromium.launch() - 启动Chromium浏览器
         # headless=False - 显示浏览器窗口（True则无头模式，不显示窗口）
         # 其他选项：slow_mo=1000（每个操作延迟1秒），devtools=True（打开开发者工具）
-        self.browser = self.playwright.chromium.launch(headless=False)
+        self.browser = self.playwright.chromium.launch(headless=True)
+
         
         # browser.new_page() - 创建新的浏览器标签页
         # 返回Page对象，用于后续的页面操作
