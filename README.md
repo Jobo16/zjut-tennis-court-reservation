@@ -47,6 +47,7 @@ playwright install chromium
 
 #### 方式一：使用 Web 界面（推荐）
 
+![UI界面](webdemo.png)
 1. 启动 Web 配置界面：
 ```bash
 python web_config.py
