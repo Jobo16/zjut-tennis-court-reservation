@@ -135,11 +135,7 @@ logs/
 *.temp
 
 # 截图文件（可选，如果不想提交截图）
-*.png
-*.jpg
-*.jpeg
-*.gif
-*.bmp
+
 
 # Playwright
 test-results/
