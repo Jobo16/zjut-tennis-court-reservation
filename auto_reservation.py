@@ -13,6 +13,7 @@ class AutoReservation:
         self.username = os.getenv('LOGIN_USERNAME')
         self.password = os.getenv('PASSWORD')
         self.url = "http://www.api.zgyy.zjut.edu.cn/h5/main/reservation"
+        self.playwright = None  # 保存playwright实例
         self.browser = None
         self.page = None
         # 同行人员信息
@@ -23,12 +24,12 @@ class AutoReservation:
     def start_browser(self):
         """启动浏览器"""
         # sync_playwright().start() - 启动Playwright实例
-        playwright = sync_playwright().start()
+        self.playwright = sync_playwright().start()
         
         # playwright.chromium.launch() - 启动Chromium浏览器
         # headless=False - 显示浏览器窗口（True则无头模式，不显示窗口）
         # 其他选项：slow_mo=1000（每个操作延迟1秒），devtools=True（打开开发者工具）
-        self.browser = playwright.chromium.launch(headless=False)
+        self.browser = self.playwright.chromium.launch(headless=False)
         
         # browser.new_page() - 创建新的浏览器标签页
         # 返回Page对象，用于后续的页面操作
@@ -127,8 +128,6 @@ class AutoReservation:
             # 点击室外网球场的radio按钮
             # ".van-radio" - 选择class为van-radio的元素（通常是单选按钮）
             self.page.click(".van-radio")
-            
-            
             
             # 点击下一步按钮
             self.page.click("text=下一步")
@@ -300,7 +299,11 @@ class AutoReservation:
             # 这会关闭所有标签页和浏览器窗口
             # 如果只想关闭单个页面，使用page.close()
             self.browser.close()
-            print("浏览器已关闭")
+        if self.playwright:
+            # playwright.stop() - 正确关闭playwright实例
+            # 确保所有后台进程都被清理
+            self.playwright.stop()
+        print("浏览器已关闭")
     
     def run(self):
         """运行自动预约程序"""
