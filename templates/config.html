@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>预约配置系统</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .form-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .form-section h2 {
+            margin-top: 0;
+            color: #555;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .time-grid {
+            display: grid;
+            grid-template-columns: 120px repeat(22, 1fr);
+            gap: 2px;
+            margin-top: 20px;
+        }
+        .grid-header {
+            background-color: #007bff;
+            color: white;
+            padding: 8px 4px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .time-label {
+            background-color: #6c757d;
+            color: white;
+            padding: 8px;
+            text-align: center;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .time-slot {
+            position: relative;
+        }
+        .time-slot input[type="checkbox"] {
+            width: 100%;
+            height: 35px;
+            margin: 0;
+            cursor: pointer;
+        }
+        .time-slot input[type="checkbox"]:checked {
+            background-color: #28a745;
+        }
+        .submit-btn {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            display: block;
+            margin: 30px auto 0;
+        }
+        .submit-btn:hover {
+            background-color: #0056b3;
+        }
+        .message {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            text-align: center;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏸 预约配置系统</h1>
+        
+        <form id="configForm">
+            <!-- 用户信息部分 -->
+            <div class="form-section">
+                <h2>👤 用户信息</h2>
+                <div class="form-group">
+                    <label for="username">用户名:</label>
+                    <input type="text" id="username" name="username" value="{{ config.username }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">密码:</label>
+                    <input type="password" id="password" name="password" value="{{ config.password }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="companion_name">同行人姓名:</label>
+                    <input type="text" id="companion_name" name="companion_name" value="{{ config.companion_name }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="companion_phone">同行人手机号:</label>
+                    <input type="text" id="companion_phone" name="companion_phone" value="{{ config.companion_phone }}" required>
+                </div>
+            </div>
+            
+            <!-- 时间段选择部分 -->
+            <div class="form-section">
+                <h2>⏰ 时间段选择</h2>
+                <p>点击网格选择要预约的时间段和场地：</p>
+                
+                <div class="time-grid">
+                    <!-- 表头 -->
+                    <div class="grid-header">时间\场地</div>
+                    {% for court in courts %}
+                    <div class="grid-header">{{ court }}</div>
+                    {% endfor %}
+                    
+                    <!-- 时间段行 -->
+                    {% for time_slot in time_slots %}
+                    {% set outer_loop = loop %}
+                    <div class="time-label">{{ time_slot }}</div>
+                    {% for court in courts %}
+                    <div class="time-slot">
+                        {% set slot_value = outer_loop.index0 ~ '_' ~ loop.index0 %}
+                        <input type="checkbox" name="time_slots" value="{{ slot_value }}" title="{{ time_slot }} - {{ court }}" {% if slot_value in config.selected_slots %}checked{% endif %}>
+                    </div>
+                    {% endfor %}
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <button type="submit" class="submit-btn">💾 保存配置</button>
+        </form>
+        
+        <div id="message"></div>
+    </div>
+    
+    <script>
+        document.getElementById('configForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            
+            fetch('/save_config', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                const messageDiv = document.getElementById('message');
+                if (data.success) {
+                    messageDiv.innerHTML = '<div class="message success">' + data.message + '</div>';
+                } else {
+                    messageDiv.innerHTML = '<div class="message error">' + data.message + '</div>';
+                }
+            })
+            .catch(error => {
+                const messageDiv = document.getElementById('message');
+                messageDiv.innerHTML = '<div class="message error">保存失败：' + error + '</div>';
+            });
+        });
+    </script>
+</body>
+</html>
