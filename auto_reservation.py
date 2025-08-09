@@ -298,5 +298,5 @@ class AutoReservation:
             self.close_browser()
 
 if __name__ == "__main__":
-    app = AutoReservation()
+    app = AutoReservation(auto_close=True)
     app.run()
