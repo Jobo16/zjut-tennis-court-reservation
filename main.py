@@ -110,17 +110,17 @@ class ReservationScheduler:
 def scheduled_reservation():
     """定时执行的预约任务"""
     print(f"\n[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] 开始执行定时预约任务")
-    csv_file = r"c:\Users\admin\Desktop\2project\自动预约程序\reservation.csv"
+    csv_file = r".\reservation.csv"
     scheduler = ReservationScheduler(csv_file)
     scheduler.run_all_reservations()
     print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] 定时预约任务完成\n")
 
 if __name__ == "__main__":
     # 设置定时任务：每天7:00:05执行
-    schedule.every().day.at("07:00:05").do(scheduled_reservation)
+    schedule.every().day.at("10:14:00").do(scheduled_reservation)
     
     print("自动预约程序已启动，等待定时执行...")
-    print("执行时间：每天 07:00:05")
+    print("执行时间：每天 10:14:00")
     print("按 Ctrl+C 退出程序")
     print("-" * 50)
     

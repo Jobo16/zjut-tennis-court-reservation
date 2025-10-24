@@ -1,3 +1,4 @@
 playwright>=1.41.0
 schedule>=1.2.0
 python-dotenv>=1.0.0
+flask>=2.3.0
